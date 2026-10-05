@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8">
+  <title>Pay Fixation Calculator 2026</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <div class="calculator-card">
+    <h2>পে-ফিক্সেশন ক্যালকুলেটর (২০২৬)</h2>
+
+    <!-- Grade Dropdown -->
+    <div class="input-group">
+      <label for="gradeSelect">আপনার গ্রেড সিলেক্ট করুন:</label>
+      <select id="gradeSelect" onchange="loadBasicOptions()">
+        <option value="">-- গ্রেড বেছে নিন --</option>
+        <!-- for show 1st to 20th grade -->
+      </select>
+    </div>
+
+    <!-- 30 june 2026 basic -->
+    <div class="input-group">
+      <label for="oldBasic">৩০ জুন ২০২৬ তারিখের মূল বেতন (টাকা):</label>
+      <select id="oldBasic">
+        <option value="">-- আগে গ্রেড সিলেক্ট করুন --</option>
+      </select>
+    </div>
+
+    <!-- . 1 july increment check box -->
+    <div class="checkbox-group">
+      <input type="checkbox" id="hasIncrement" checked>
+      <label for="hasIncrement">১ জুলাই ২০২৬ তারিখে ইনক্রিমেন্ট প্রদেয়?</label>
+    </div>
+
+    <button onclick="calculateFixation()">বেতন নির্ধারণ (Fixation) করুন</button>
+
+    <!-- Resultbox -->
+    <div id="resultBox" class="result-box" style="display: none;">
+      <h3>ফিক্সেশন ফলাফল:</h3>
+      <p>ফিক্সড নতুন মূল বেতন (Step Value): <span id="fixedBasic">০</span> টাকা</p>
+      <p id="incNote" class="inc-note"></p>
+      <hr>
+      <h4>ফেজিং অনুযায়ী মাসিক প্রাপ্ত মূল বেতন:</h4>
+      <p><strong>১ম ফেজ (১ জুলাই ২৬ - ৩১ ডিসেম্বর ২৬):</strong> <span id="phase1Pay">০</span> টাকা</p>
+      <p><strong>২য় ফেজ (১ জানুয়ারি ২৭ - ৩০ জুন ২৭):</strong> <span id="phase2Pay">০</span> টাকা</p>
+      <p><strong>৩য় ফেজ (১ জুলাই ২৭ থেকে):</strong> <span id="phase3Pay">০</span> টাকা (১০০%)</p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
