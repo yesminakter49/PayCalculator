@@ -7,15 +7,30 @@
 </head>
 <body>
 
-  <div class="calculator-card">
-    <h2>পে-ফিক্সেশন ক্যালকুলেটর (২০২৬)</h2>
+  <div class="calculator-card no-print">
+    <h2>পে-ফিক্সেশন ক্যালকুলেটর ও প্রতিবেদন (২০২৬)</h2>
+
+    <!-- Non mandatory inputs -->
+    <div class="input-group">
+      <label for="deptName">জাতীয় পরিচয় পত্র নম্বর (ঐচ্ছিক):</label>
+      <input type="text" id="deptName" placeholder="যেমন: ২১৬০১০১০০১০">
+    </div>
+
+    <div class="input-group">
+      <label for="empName">কর্মকর্তা/কর্মচারীর নাম ও এমপ্লি আইডি নম্বর (ঐচ্ছিক):</label>
+      <input type="text" id="empName" placeholder="যেমন: মো: রফিকুল ইসলাম">
+    </div>
+
+    <div class="input-group">
+      <label for="empDesignation">বর্তমান ডিপার্টমেন্ট ও পদবী  (ঐচ্ছিক):</label>
+      <input type="text" id="empDesignation" placeholder="যেমন: উচ্চমান সহকারী">
+    </div>
 
     <!-- Grade Dropdown -->
     <div class="input-group">
       <label for="gradeSelect">আপনার গ্রেড সিলেক্ট করুন:</label>
       <select id="gradeSelect" onchange="loadBasicOptions()">
         <option value="">-- গ্রেড বেছে নিন --</option>
-        <!-- for show 1st to 20th grade -->
       </select>
     </div>
 
@@ -27,7 +42,7 @@
       </select>
     </div>
 
-    <!-- . 1 july increment check box -->
+    <!-- 1 july increment check box -->
     <div class="checkbox-group">
       <input type="checkbox" id="hasIncrement" checked>
       <label for="hasIncrement">১ জুলাই ২০২৬ তারিখে ইনক্রিমেন্ট প্রদেয়?</label>
@@ -35,8 +50,8 @@
 
     <button onclick="calculateFixation()">বেতন নির্ধারণ (Fixation) করুন</button>
 
-    <!-- Resultbox -->
-    <div id="resultBox" class="result-box" style="display: none;">
+    <!-- Quick Summary Box -->
+    <div id="quickSummaryBox" class="result-box" style="display: none;">
       <h3>ফিক্সেশন ফলাফল:</h3>
       <p>ফিক্সড নতুন মূল বেতন (Step Value): <span id="fixedBasic">০</span> টাকা</p>
       <p id="incNote" class="inc-note"></p>
@@ -45,6 +60,131 @@
       <p><strong>১ম ফেজ (১ জুলাই ২৬ - ৩১ ডিসেম্বর ২৬):</strong> <span id="phase1Pay">০</span> টাকা</p>
       <p><strong>২য় ফেজ (১ জানুয়ারি ২৭ - ৩০ জুন ২৭):</strong> <span id="phase2Pay">০</span> টাকা</p>
       <p><strong>৩য় ফেজ (১ জুলাই ২৭ থেকে):</strong> <span id="phase3Pay">০</span> টাকা (১০০%)</p>
+    </div>
+  </div>
+
+  <!-- report format -->
+  <div id="resultBox" class="report-container" style="display: none;">
+    <div class="report-header">
+      <h3>চট্টগ্রাম বন্দর কতৃপক্ষ</h3>
+      <h4>এস, আর, ও নং ৩৪৮-আইন/২০২৬, তারিখ: ১৭/৯/২০২৬ </h4>
+      <h4>জাতীয় বেতন সেল, ২০২৬ অনুযায়ী বেতন নিধরারণী বিবরণী</h4>
+    </div>
+
+    <div class="info-section">
+      <p id="rowDept" style="display: none;">১। জাতীয় পরিচয় পত্র নম্বর  <span class="dots">:</span> <span id="valDept"></span></p>
+      <p id="rowName" style="display: none;">২। কর্মকর্তা/কর্মচারীর নাম ও এমপ্লি আইডি নম্বর <span class="dots">:</span> <span id="valName"></span></p>
+      <p id="rowDesig" style="display: none;">৩। বর্তমান ডিপার্টমেন্ট ও পদবী <span class="dots">:</span> <span id="valDesig"></span></p>
+    </div>
+
+    <table class="report-table">
+      <tr>
+        <td width="5%">৪।</td>
+        <td width="75%">জাতীয় বেতন স্কেল ২০১৫ অনুযায়ী ৩০ জুন ২০২৬ তারিখে মূল বেতন</td>
+        <td width="5%">:</td>
+        <td width="15%" class="text-right"><span id="r_oldBasic"></span>/-</td>
+      </tr>
+      <tr>
+        <td>৫।</td>
+        <td>জাতীয় বেতন স্কেল ২০১৫ অনুযায়ী ৩০ জুন ২০২৬ তারিখে প্রাপ্ত বেতন স্কেলের প্রারম্ভিক মূল বেতন (স্কেল শুরুর ধাপ)</td>
+        <td>:</td>
+        <td class="text-right"><span id="r_scale2015Start"></span>/-</td>
+      </tr>
+      <tr>
+        <td>৬।</td>
+        <td>পার্থক্য (৪-৫)</td>
+        <td>:</td>
+        <td class="text-right"><span id="r_diff1"></span>/-</td>
+      </tr>
+      <tr>
+        <td>৭।</td>
+        <td>জাতীয় বেতন স্কেল ২০২৬ অনুযায়ী প্রাপ্য গ্রেড/স্কেলের প্রারম্ভিক মূল বেতন (স্কেল শুরুর ধাপ)</td>
+        <td>:</td>
+        <td class="text-right"><span id="r_scale2026Start"></span>/-</td>
+      </tr>
+      <tr>
+        <td>৮।</td>
+        <td>জাতীয় বেতন স্কেল ২০২৬ অনুযায়ী ০১ জুলাই ২০২৬ তারিখে মোট মূল বেতন নির্ধারণ (৬+৭)</td>
+        <td>:</td>
+        <td class="text-right"><span id="r_totalNewBasic"></span>/-</td>
+      </tr>
+      <tr>
+        <td>৯।</td>
+        <td>জাতীয় বেতন স্কেল ২০২৬ অনুযায়ী ০১ জুলাই ২০২৬ তারিখে প্রাপ্য বেতনের ধাপ (৫ নং অনুযায়ী নির্ধারিত মূল বেতনের পরবর্তী ধাপ)</td>
+        <td>:</td>
+        <td class="text-right"><span id="r_stepBasic"></span>/-</td>
+      </tr>
+      <tr>
+        <td>১০।</td>
+        <td>০১ জুলাই ২০২৬ তারিখে ১টি ইনক্রিমেন্টসহ প্রকৃত মূল বেতন নির্ধারণ (পে-স্কেলের ৯(২) ধারা মোতাবেক)</td>
+        <td>:</td>
+        <td class="text-right"><span id="r_fixedBasic"></span>/-</td>
+      </tr>
+      <tr>
+        <td>১১।</td>
+        <td>জাতীয় বেতন স্কেল ২০১৫ অনুযায়ী ৩০ জুন ২০২৬ তারিখে আহরিত মূল বেতন</td>
+        <td>:</td>
+        <td class="text-right"><span id="r_oldBasic2"></span>/-</td>
+      </tr>
+      <tr>
+        <td>১২।</td>
+        <td>পার্থক্য (১০-১১)</td>
+        <td>:</td>
+        <td class="text-right"><span id="r_salaryDiff"></span>/-</td>
+      </tr>
+      <tr>
+        <td>১৩।</td>
+        <td>জাতীয় বেতন স্কেল ২০২৬-এ উল্লিখিত পার্থক্যের <span id="p1Label"></span> (গ্রেডভিত্তিক নির্ধারিত হার)</td>
+        <td>:</td>
+        <td class="text-right"><span id="r_phase1Diff"></span>/-</td>
+      </tr>
+      <tr>
+        <td>১৪।</td>
+        <td>জাতীয় বেতন স্কেল ২০২৬ অনুযায়ী ০১ জুলাই ২০২৬ তারিখে কার্যকরী মূল বেতন (১১+১৩)</td>
+        <td>:</td>
+        <td class="text-right"><span id="r_phase1Pay"></span>/-</td>
+      </tr>
+      <tr>
+        <td>১৫।</td>
+        <td>জাতীয় বেতন স্কেল ২০২৬-এ উল্লিখিত পার্থক্যের <span id="p2Label"></span> (গ্রেডভিত্তিক নির্ধারিত হার)</td>
+        <td>:</td>
+        <td class="text-right"><span id="r_phase2Diff"></span>/-</td>
+      </tr>
+      <tr>
+        <td>১৬।</td>
+        <td>জাতীয় বেতন স্কেল ২০২৬ অনুযায়ী ০১ জানুয়ারি ২০ ২৭ তারিখে কার্যকরী মূল বেতন (১১+১৫)</td>
+        <td>:</td>
+        <td class="text-right"><span id="r_phase2Pay"></span>/-</td>
+      </tr>
+      <tr>
+        <td>১৭।</td>
+        <td>০১ জুলাই ২০২৬ হতে ৩০ জুন ২০২৭ পর্যন্ত তারিখে ১টি ইনক্রিমেন্টসহ প্রকৃত মূল বেতনের ১০০% (পে-স্কেলের ৯(২) ধারা মোতাবেক)</td>
+        <td>:</td>
+        <td class="text-right"><span id="r_phase3Pay"></span>/-</td>
+      </tr>
+      <tr>
+        <td>১৮।</td>
+        <td>০১ জুলাই ২০২৭ তারিখে ১টি ইনক্রিমেন্টসহ প্রকৃত মূল বেতন</td>
+        <td>:</td>
+        <td class="text-right"><span id="r_nextYearBasic"></span>/-</td>
+      </tr>
+      <tr>
+        <td>১৯।</td>
+        <td>পরবর্তী বেতন বৃদ্ধির তারিখ</td>
+        <td>:</td>
+        <td>০১ জুলাই ২০২৮</td>
+      </tr>
+    </table>
+
+    <div class="allowance-section">
+      <h4>ভাতাদির প্রাপ্যতা:</h4>
+      <p>১। বাড়িভাড়া ভাতা: ৩০ জুন ২০২৬ তারিখে আহরিত মূল বেতনের হিসেবে প্রাপ্য বাড়িভাড়া ভাতা ৩১ ডিসেম্বর ২০২৭ পর্যন্ত প্রাপ্য হবেন।</p>
+      <p>২। চিকিৎসা ভাতা, নববর্ষ ভাতা, শিক্ষা সহায়ক ভাতা, ধোলাই ভাতা, টিফিন ভাতা, যাতায়াত ভাতাসহ অন্যান্য ভাতাদি ৩১ ডিসেম্বর ২০২৭ পর্যন্ত প্রাপ্য হবেন।</p>
+      <p>৩। জাতীয় বেতন স্কেল ২০২৬ অনুযায়ী সকল ভাতাদি ১ জানুয়ারি ২০২৮ তারিখে প্রাপ্য হবেন।</p>
+    </div>
+
+    <div class="action-buttons no-print">
+      <button onclick="window.print()" class="print-btn">প্রিন্ট / ডাউনলোড করুন</button>
     </div>
   </div>
 

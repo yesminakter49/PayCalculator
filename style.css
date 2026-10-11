@@ -1,10 +1,11 @@
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'SolaimanLipi', 'Segoe UI', Tahoma, sans-serif;
   background-color: #eef2f5;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  margin: 0;
   padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .calculator-card {
@@ -13,7 +14,8 @@ body {
   border-radius: 12px;
   box-shadow: 0 5px 15px rgba(0,0,0,0.1);
   width: 100%;
-  max-width: 450px;
+  max-width: 600px;
+  margin-bottom: 25px;
 }
 
 h2 {
@@ -35,13 +37,14 @@ label {
   font-size: 14px;
 }
 
-select {
+select, input[type="text"] {
   width: 100%;
   padding: 10px;
   border: 1px solid #bdc3c7;
   border-radius: 6px;
   font-size: 14px;
   background-color: #fff;
+  box-sizing: border-box;
 }
 
 .checkbox-group {
@@ -83,6 +86,7 @@ button:hover {
   background-color: #154360;
 }
 
+/* Summary box */
 .result-box {
   margin-top: 25px;
   padding: 18px;
@@ -106,4 +110,114 @@ span {
   color: #27ae60;
   font-weight: bold;
   margin-top: 5px;
+}
+
+/* Report styles */
+.report-container {
+  background: #ffffff;
+  padding: 40px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  width: 100%;
+  max-width: 800px;
+  box-sizing: border-box;
+  color: #000;
+}
+
+.report-header {
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.report-header h3 {
+  margin: 0;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.report-header h4 {
+  margin: 5px 0 20px 0;
+  font-size: 16px;
+  color: #333;
+}
+
+.info-section {
+  margin-bottom: 25px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.info-section p {
+  margin: 4px 0;
+}
+
+.dots {
+  display: inline-block;
+  width: 20px;
+  text-align: center;
+}
+
+.report-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+.report-table td {
+  padding: 6px 4px;
+  vertical-align: top;
+  border-bottom: 1px dotted #ccc;
+  line-height: 1.5;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.allowance-section {
+  margin-top: 20px;
+  font-size: 13px;
+  border-top: 1px solid #333;
+  padding-top: 10px;
+}
+
+.allowance-section h4 {
+  margin: 0 0 5px 0;
+  font-size: 14px;
+}
+
+.allowance-section p {
+  margin: 3px 0;
+}
+
+.action-buttons {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.print-btn {
+  background-color: #27ae60;
+  width: auto;
+  padding: 10px 30px;
+}
+
+.print-btn:hover {
+  background-color: #219653;
+}
+
+/* print option */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background-color: #fff;
+    padding: 0;
+  }
+  .report-container {
+    box-shadow: none;
+    padding: 0;
+    max-width: 100%;
+  }
 }

@@ -1,4 +1,3 @@
-// 2026 &2015 pay scal)
 const scales2015 = {
   1: [78000],
   2: [66000, 68480, 71050, 73720, 76490],
@@ -45,7 +44,6 @@ const scales2026 = {
   20: [20000, 21000, 22100, 23200, 24400, 25600, 26900, 28200, 29600, 31100, 32600, 34300, 36000, 37800, 39600, 41600, 43700, 45900, 48400]
 };
 
-// grade dropdown
 window.onload = function() {
   const gradeSelect = document.getElementById('gradeSelect');
   for (let g = 1; g <= 20; g++) {
@@ -56,7 +54,6 @@ window.onload = function() {
   }
 };
 
-// 30 june grade step
 function loadBasicOptions() {
   const grade = document.getElementById('gradeSelect').value;
   const oldBasicSelect = document.getElementById('oldBasic');
@@ -76,8 +73,11 @@ function loadBasicOptions() {
   });
 }
 
-// pay fixation calculation
 function calculateFixation() {
+  const deptName = document.getElementById('deptName').value.trim();
+  const empName = document.getElementById('empName').value.trim();
+  const empDesignation = document.getElementById('empDesignation').value.trim();
+  
   const grade = parseInt(document.getElementById('gradeSelect').value);
   const oldBasic = parseFloat(document.getElementById('oldBasic').value);
   const hasIncrement = document.getElementById('hasIncrement').checked;
@@ -87,63 +87,116 @@ function calculateFixation() {
     return;
   }
 
+  // ঐচ্ছিক ফিল্ড রেন্ডারিং
+  if (deptName) {
+    document.getElementById('valDept').innerText = deptName;
+    document.getElementById('rowDept').style.display = 'block';
+  } else {
+    document.getElementById('rowDept').style.display = 'none';
+  }
+
+  if (empName) {
+    document.getElementById('valName').innerText = empName;
+    document.getElementById('rowName').style.display = 'block';
+  } else {
+    document.getElementById('rowName').style.display = 'none';
+  }
+
+  if (empDesignation) {
+    document.getElementById('valDesig').innerText = empDesignation;
+    document.getElementById('rowDesig').style.display = 'block';
+  } else {
+    document.getElementById('rowDesig').style.display = 'none';
+  }
+
   const scale2015 = scales2015[grade];
   const scale2026 = scales2026[grade];
 
   const scale2015Start = scale2015[0];
   const scale2026Start = scale2026[0];
 
-  // পার্থক্য = ৩০ জুনের বেসিক - ২০১৫ স্কেলের সর্বনিম্ন বেসিক
-  const diff = oldBasic - scale2015Start;
+  const diff1 = oldBasic - scale2015Start;
+  const totalNewBasic = scale2026Start + diff1;
 
-  // টার্গেট টাকা = ২০২৬ স্কেলের প্রারম্ভিক বেসিক + পার্থক্য
-  const targetAmount = scale2026Start + diff;
-
-  // ২০২৬ স্কেলে ধাপ মেলানো (সমান বা পরবর্তী উচ্চতর ধাপ)
   let baseIndex = 0;
   for (let i = 0; i < scale2026.length; i++) {
-    if (scale2026[i] >= targetAmount) {
+    if (scale2026[i] >= totalNewBasic) {
       baseIndex = i;
       break;
     }
   }
+  const stepBasic = scale2026[baseIndex];
 
-  // if increment is appliacable , then move to nex step
   let finalIndex = baseIndex;
   if (hasIncrement) {
     if (baseIndex + 1 < scale2026.length) {
       finalIndex = baseIndex + 1;
-    } else {
-      finalIndex = baseIndex; // if already at last step
     }
   }
-
   const fixedBasic = scale2026[finalIndex];
 
-  // বর্ধিত বেসিকের মোট পার্থক্য = নতুন ফিক্সড বেসিক - ৩০ জুনের বেসিক
+  // one increment for 1 july 2027 for report coloumn 
+  let nextYearIndex = finalIndex;
+  if (finalIndex + 1 < scale2026.length) {
+    nextYearIndex = finalIndex + 1;
+  }
+  const nextYearBasic = scale2026[nextYearIndex];
+
   const salaryDiff = fixedBasic - oldBasic;
 
-  // ফেজিং নির্ধারণ (১–৯ম গ্রেডের জন্য ৪০%/৭০%, ১০–২০তম গ্রেডের জন্য ৫০%/৭৫%)
-  let phase1Percent = (grade <= 9) ? 0.40 : 0.50;
-  let phase2Percent = (grade <= 9) ? 0.70 : 0.75;
+  // fesiging rates and labels based on grade
+  let p1Rate = (grade <= 9) ? 0.40 : 0.50;
+  let p2Rate = (grade <= 9) ? 0.70 : 0.75;
+  let p1LabelText = (grade <= 9) ? "৪০% (১ম হতে ৯ম গ্রেড)" : "৫০% (১০ম হতে ২০তম গ্রেড)";
+  let p2LabelText = (grade <= 9) ? "৭০% (১ম হতে ৯ম গ্রেড)" : "৭৫% (১০ম হতে ২০তম গ্রেড)";
 
-  const phase1Pay = oldBasic + (salaryDiff * phase1Percent);
-  const phase2Pay = oldBasic + (salaryDiff * phase2Percent);
+  const phase1Diff = salaryDiff * p1Rate;
+  const phase1Pay = oldBasic + phase1Diff;
+
+  const phase2Diff = salaryDiff * p2Rate;
+  const phase2Pay = oldBasic + phase2Diff;
+
   const phase3Pay = fixedBasic;
 
-  // output
+  // fexation summary box
   document.getElementById('fixedBasic').innerText = fixedBasic.toLocaleString();
-  
   const incNote = document.getElementById('incNote');
   if (hasIncrement) {
     incNote.innerText = "✓ ১ জুলাই ২০২৬ তারিখের ১টি বার্ষিক ইনক্রিমেন্ট সহ ফিক্সড করা হয়েছে।";
   } else {
     incNote.innerText = "✓ ইনক্রিমেন্ট ছাড়া শুধুমাত্র নতুন স্কেলে কনভার্ট করা হয়েছে।";
   }
-
   document.getElementById('phase1Pay').innerText = phase1Pay.toLocaleString();
   document.getElementById('phase2Pay').innerText = phase2Pay.toLocaleString();
   document.getElementById('phase3Pay').innerText = phase3Pay.toLocaleString();
+  document.getElementById('quickSummaryBox').style.display = 'block';
 
+  // Full report box
+  document.getElementById('r_oldBasic').innerText = oldBasic.toLocaleString();
+  document.getElementById('r_scale2015Start').innerText = scale2015Start.toLocaleString();
+  document.getElementById('r_diff1').innerText = diff1.toLocaleString();
+  document.getElementById('r_scale2026Start').innerText = scale2026Start.toLocaleString();
+  document.getElementById('r_totalNewBasic').innerText = totalNewBasic.toLocaleString();
+  document.getElementById('r_stepBasic').innerText = stepBasic.toLocaleString();
+  document.getElementById('r_fixedBasic').innerText = fixedBasic.toLocaleString();
+  
+  document.getElementById('r_oldBasic2').innerText = oldBasic.toLocaleString();
+  document.getElementById('r_salaryDiff').innerText = salaryDiff.toLocaleString();
+  
+  document.getElementById('p1Label').innerText = p1LabelText;
+  document.getElementById('r_phase1Diff').innerText = phase1Diff.toLocaleString();
+  document.getElementById('r_phase1Pay').innerText = phase1Pay.toLocaleString();
+  
+  document.getElementById('p2Label').innerText = p2LabelText;
+  document.getElementById('r_phase2Diff').innerText = phase2Diff.toLocaleString();
+  document.getElementById('r_phase2Pay').innerText = phase2Pay.toLocaleString();
+  
+  document.getElementById('r_phase3Pay').innerText = phase3Pay.toLocaleString();
+  
+  // 1 july 2027 increment for report
+  document.getElementById('r_nextYearBasic').innerText = nextYearBasic.toLocaleString();
+
+  // report show
   document.getElementById('resultBox').style.display = 'block';
+  document.getElementById('resultBox').scrollIntoView({ behavior: 'smooth' });
 }
